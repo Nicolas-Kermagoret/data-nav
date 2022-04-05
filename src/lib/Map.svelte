@@ -24,7 +24,7 @@
         const map = L.map(container);
 
         // Set the position and zoom level of the map
-        map.setView([0, 0], 4);
+        map.setView([28.210037, -16.032647], 4);
 
         // Add base layer
         L.tileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -59,39 +59,41 @@
     }
 
     function createArrowIcon(mmsi, angle) {
-        return  L.divIcon({
-        iconSize: [20, 20],
-        className: "ship-icon",
-        html: `<?xml version="1.0" encoding="UTF-8"?><svg style="transform: rotate(${angle}deg);" version="1.1" viewBox="0 0 210 297" xmlns="http://www.w3.org/2000/svg"><path style="fill: ${stringToColour(mmsi)}" d="m105.27 0.69784-104.88 295.98 104.88-44.396 104.88 44.396z" stroke="#000" stroke-width=".46616px"/></svg>`,
-    });
+        return L.divIcon({
+            iconSize: [20, 20],
+            className: "ship-icon",
+            html: `<?xml version="1.0" encoding="UTF-8"?><svg style="transform: rotate(${angle}deg);" version="1.1" viewBox="0 0 210 297" xmlns="http://www.w3.org/2000/svg"><path style="fill: ${stringToColour(
+                mmsi
+            )}" d="m105.27 0.69784-104.88 295.98 104.88-44.396 104.88 44.396z" stroke="#000" stroke-width=".46616px"/></svg>`,
+        });
     }
 
     function displayTrajectory(ship, range) {
         polylinesGroupLayer.clearLayers();
         const points = [];
-        const color = stringToColour(ship.mmsi);
         const lastRecord = ship.data[ship.data.length - 1];
         if (!range) {
             range = { from: lastRecord.datetime, to: lastRecord.datetime };
         }
-        // lastRecordDate.setDate(lastRecordDate.getDate() -5);
-        ship.data.forEach((record) => {
+        ship.data.forEach((record, index) => {
             if (isDayBetween(record.datetime, range)) {
                 const point = [record.lat, record.lon, record.sog];
                 points.push(point);
-                polylinesGroupLayer.addLayer(
-                    new RotatedMarker(point, {
-                        icon: chevronIcon,
-                        rotationAngle: record.cog,
-                        rotationCenter: "center",
-                    })
-                    // @ts-ignore
-                    .bindPopup(`<b>MMSI</b>: ${ship.mmsi}<br>
-                  <b>Date</b>: ${record.datetime}<br>
-                  <b>Position</b>: ${point}<br>
-                  <b>Speed</b>: ${record.sog} knots<br>
-                  <b>Heading</b>: ${record.cog}°<br>`)
-                );
+                if (index !== ship.data.length -1) {
+                    polylinesGroupLayer.addLayer(
+                        new RotatedMarker(point, {
+                            icon: chevronIcon,
+                            rotationAngle: record.cog,
+                            rotationCenter: "center",
+                        })
+                        // @ts-ignore
+                        .bindPopup(`<b>MMSI</b>: ${ship.mmsi}<br>
+                      <b>Date</b>: ${record.datetime}<br>
+                      <b>Position</b>: ${point}<br>
+                      <b>Speed</b>: ${record.sog} knots<br>
+                      <b>Heading</b>: ${record.cog}°<br>`)
+                    );
+                }
             }
         });
         polylinesGroupLayer.addLayer(
@@ -111,7 +113,7 @@
             const lastRecord = ship.data[ship.data.length - 1];
             const point = [lastRecord.lat, lastRecord.lon];
             L.marker(point, {
-                icon: createArrowIcon(ship.mmsi, lastRecord.cog)
+                icon: createArrowIcon(ship.mmsi, lastRecord.cog),
             })
                 // @ts-ignore
                 .addTo(map)
@@ -159,7 +161,8 @@
 <style>
     @import "../../node_modules/leaflet/dist/leaflet.css";
     #map {
-        width: 80%;
+        display: flex;
+        flex: 1 0 auto;
         height: 800px;
         z-index: 0;
     }

@@ -67,7 +67,7 @@
                     on:change={updateDateRange}
                 />
             </div>
-            <div>Last known data:</div>
+            <div><b>Last known data</b></div>
             <div><b>Date: </b>{lastRecord.datetime}</div>
             <div><b>Position: </b>[{lastRecord.lat}, {lastRecord.lon}]</div>
             <div><b>Speed: </b>{lastRecord.sog}knots</div>

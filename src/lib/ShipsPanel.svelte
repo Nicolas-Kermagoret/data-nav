@@ -36,8 +36,7 @@
     .ships-panel {
         display: flex;
         flex-direction: column;
-        flex: 1 0 auto;
-        height: 800px;
+        flex: 0 0 auto;
         width: 20%;
     }
     .tabs {

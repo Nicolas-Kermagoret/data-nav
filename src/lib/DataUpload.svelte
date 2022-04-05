@@ -7,15 +7,16 @@
 
     let files;
     let processing = false;
-    let mmsiFilter = "";
+    let noDataFound = false;
+    let mmsiFilter = '';
     $: canUpload =
         files && files.length === 1 && mmsiFilter !== "" && !processing;
 
     function handleFiles() {
         if (!processing) {
             processing = true;
-            const file =
-                files && files[0]; /* now you can work with the file list */
+            noDataFound = false;
+            const file = files && files[0];
             const shipsToUpload = {};
             const mmsiToIncludes = mmsiFilter.replace(/\s/g, "").split(",");
             Papa.parse(file, {
@@ -49,15 +50,16 @@
                         }
                     }
                 },
-                error: () => {
-                    processing = false;
-                    files = [];
-                },
                 complete: () => {
-                    ships.set(Object.values(shipsToUpload));
+                    const shipsArray = Object.values(shipsToUpload);
+                    if (shipsArray && shipsArray.length > 0) {
+                        ships.set(shipsArray);
+                        dispatch("data-uploaded");
+                    } else {
+                        noDataFound = true;
+                    }
                     processing = false;
                     files = [];
-                    dispatch("data-uploaded");
                 },
             });
         }
@@ -66,12 +68,17 @@
 
 <div class="data-upload">
     <div>Upload AIS dataset:</div>
-    <input type="file" id="file_input" name="file_input" bind:files />
+    <input type="file" id="file_input" name="file_input" bind:files/>
     <div>Specify MMSI numbers to filter in dataset separated by comma:</div>
     <textarea
         bind:value={mmsiFilter}
         placeholder="247389200, 225416000, 247322800"
     />
+    {#if noDataFound}
+        <div class="error">
+            ⚠️ No ships found, check your file or MMSI filters
+        </div>
+    {/if}
     <button
         class={!canUpload ? "button-disabled" : ""}
         on:click={handleFiles}
@@ -121,7 +128,7 @@
     }
     textarea {
         resize: none;
-        min-width: 24em;
+        min-width: 90%;
         min-height: 7em;
     }
 
