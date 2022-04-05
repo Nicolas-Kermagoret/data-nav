@@ -1,5 +1,4 @@
 <script>
-  import logo from "./assets/svelte.png";
   import Map from "./lib/Map.svelte";
   import ShipsPanel from "./lib/ShipsPanel.svelte";
 </script>

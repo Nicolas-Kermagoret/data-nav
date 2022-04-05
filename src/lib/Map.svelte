@@ -2,10 +2,8 @@
     import * as L from "leaflet";
     import { RotatedMarker } from "leaflet-marker-rotation";
     import { ships, selectedShip, dateRange } from "../store";
-    import { onMount } from "svelte";
     import { onDestroy } from "svelte";
     import LeafletHotline from "leaflet-hotline";
-    import arrow from "../assets/arrow.svg";
     import chevron from "../assets/chevron-up.svg";
     import { isDayBetween } from "../utils/date.util";
 
