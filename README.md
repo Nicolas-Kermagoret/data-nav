@@ -2,13 +2,18 @@
 
 Web tool to import csv AIS dataset and display ships navigation on a map. Using javascript web framework Svelte and Leaflet map library 
 
-![](./doc/screenshot.png)
+![](./doc/screenshot.png)  
+  
+[Demo here](https://nicolas-kermagoret.github.io/data-nav/)  
+⚠️ Plugin leaflet-hotline is currently only work on dev mode, trajectory doesn't display speed color
 
 ## Running  
 
 Get Node and npm.  
 Download source code from github then open a terminal in the root directory
 ```
+git clone https://github.com/Nicolas-Kermagoret/data-nav.git
+cd data-nav
 npm install
 npm run dev
 ```
