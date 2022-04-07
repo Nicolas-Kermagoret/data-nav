@@ -5,7 +5,6 @@ Web tool to import csv AIS dataset and display ships navigation on a map. Using 
 ![](./doc/screenshot.png)  
   
 [Demo here](https://nicolas-kermagoret.github.io/data-nav/)  
-⚠️ Plugin leaflet-hotline only works on dev mode, trajectory doesn't display speed color
 
 ## Running  
 
