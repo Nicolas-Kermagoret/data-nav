@@ -1,5 +1,5 @@
 <script>
-    import * as L from "leaflet";
+    import L from "leaflet";
     import { RotatedMarker } from "leaflet-marker-rotation";
     import { ships, selectedShip, dateRange } from "../store";
     import { onDestroy } from "svelte";
@@ -58,11 +58,11 @@
         return colour;
     }
 
-    function createArrowIcon(mmsi, angle) {
+    function createArrowIcon(mmsi) {
         return L.divIcon({
             iconSize: [20, 20],
             className: "ship-icon",
-            html: `<?xml version="1.0" encoding="UTF-8"?><svg style="transform: rotate(${angle}deg);" version="1.1" viewBox="0 0 210 297" xmlns="http://www.w3.org/2000/svg"><path style="fill: ${stringToColour(
+            html: `<?xml version="1.0" encoding="UTF-8"?><svg version="1.1" viewBox="0 0 210 297" xmlns="http://www.w3.org/2000/svg"><path style="fill: ${stringToColour(
                 mmsi
             )}" d="m105.27 0.69784-104.88 295.98 104.88-44.396 104.88 44.396z" stroke="#000" stroke-width=".46616px"/></svg>`,
         });
@@ -84,7 +84,7 @@
                         new RotatedMarker(point, {
                             icon: chevronIcon,
                             rotationAngle: record.cog,
-                            rotationCenter: "center",
+                            rotationOrigin: "center",
                         })
                         // @ts-ignore
                         .bindPopup(`<b>MMSI</b>: ${ship.mmsi}<br>
@@ -112,9 +112,11 @@
         if (ship && ship.data && ship.data.length > 0) {
             const lastRecord = ship.data[ship.data.length - 1];
             const point = [lastRecord.lat, lastRecord.lon];
-            L.marker(point, {
-                icon: createArrowIcon(ship.mmsi, lastRecord.cog),
-            })
+            new RotatedMarker(point, {
+                            icon: createArrowIcon(ship.mmsi),
+                            rotationAngle: lastRecord.cog,
+                            rotationOrigin: "center",
+                        })
                 // @ts-ignore
                 .addTo(map)
                 .bindPopup(
